@@ -252,9 +252,180 @@ run_swatplus <- function(project_path, output, parameter = NULL,
         file.remove(thread_path%//%"calibration.cal")
       }
     } else {
-      write_calibration(thread_path, parameter, model_setup$calibration.cal,
-                        run_index, i_run)
-    }
+	lookup <- read.csv(paste0(thread_path,"/","lookup.lkp"), header = T, sep = ",", colClasses = c("character", "character"))
+	if (!file.exists(thread_path %//% "lookup.lkp")) {
+	 stop("lookup.lkp doesn't exist!")
+	}
+	in_cal_parms <- parameter$definition$parameter %in% lookup[,1]
+	if (any(!in_cal_parms)) {
+	 stop("Parameters" %&&% paste(parameter$definition$par_name[!in_cal_parms],
+								  collapse = ", ") %&&% "not defined in 'lookup.lkp'")
+	}
+	lkp <- parameter$definition[c(1,3,4)]
+	lkp$file <- rep("", nrow(lkp))
+	for(k in 1:nrow(lkp)){
+	 lkp$file[k] <- lookup[which(lookup[,1]==unlist(lkp[k,1])),2]
+	}
+	lkp$value <- as.numeric(unlist(parameter$values[run_index[i_run],]))
+	lfi <- unlist(unique(lkp[,4]))
+	# for loop over all files
+	for(i in 1:length(lfi)){
+	 lsu <- lkp[which(lkp$file==lfi[i]),]
+	 if(lfi[i]=="plants.plt"){                         # for plant parameters
+	   test <- read.csv(paste0(project_path,"/",lfi[i]), sep = "", skip = 1, header = T)
+	   for(j in 1:nrow(lsu)){
+		 if(lsu[j,3]=="pctchg"){
+		   test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))] <- test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))]*((100+as.numeric(lsu[j,5]))/100)
+		 }
+		 if(lsu[j,3]=="relchg"){
+		   test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))] <- test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))]*(1+as.numeric(lsu[j,5]))
+		 }
+		 if(lsu[j,3]=="abschg"){
+		   test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))] <- test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))]+as.numeric(lsu[j,5])
+		 }
+		 if(lsu[j,3]=="absval"){
+		   test[which(test$name==as.character(lsu[j,2])),grep(lsu[j,1],names(test))] <- as.numeric(lsu[j,5])
+		 }
+	   }
+	   sink(paste0(thread_path,"/",lfi[i]))
+	   writeLines(c("written by SWAT+ editor and modiefied for calibration"))
+	   write.table(test, quote = F, sep = " ", row.names = F)
+	   sink()
+	 }else if(lfi[i]=="soils.sol"){
+	   soil <- read.fwf(file = paste0(project_path,"/",lfi[i]),
+						widths = c(4,31,18,14,14,14,9,32,14,14,14,14,14,14,14,14,14,14,14,14,14),
+						skip = 1,
+						colClass = rep("character",21))
+	   soil <- data.frame(lapply(as.data.frame(lapply(soil, trimws)), as.character), stringsAsFactors=FALSE)
+	   names(soil) <- soil[1,]
+	   soil <- soil[-1,]
+	   soil[c(1,2,4:21)] <- lapply(soil[c(1,2,4:21)], as.numeric)
+	   for(j in 1:nrow(lsu)){
+		 if(lsu[j,3]=="pctchg"){
+		   soil[,grep(lsu[j,1],names(soil))] <- soil[,grep(lsu[j,1],names(soil))]*((100+as.numeric(lsu[j,5]))/100)
+		 }
+		 if(lsu[j,3]=="relchg"){
+		   soil[,grep(lsu[j,1],names(soil))] <- soil[,grep(lsu[j,1],names(soil))]*(1+as.numeric(lsu[j,5]))
+		 }
+		 if(lsu[j,3]=="abschg"){
+		   for(k in 1:nrow(soil)){
+			 if(is.na(soil[k,grep(lsu[j,1],names(soil))])){
+			 }else{
+			   soil[k,grep(lsu[j,1],names(soil))] <- soil[k,grep(lsu[j,1],names(soil))]+as.numeric(lsu[j,5])
+			 }
+		   }
+		 }
+		 if(lsu[j,3]=="absval"){
+		   for(k in 1:nrow(soil)){
+			 if(is.na(soil[k,grep(lsu[j,1],names(soil))])){
+			 }else{
+			   soil[k,grep(lsu[j,1],names(soil))] <- as.numeric(lsu[j,5])
+			 }
+		   }
+		 }
+	   }
+	   col_names <- paste0(c(sprintf(c("%-4s", "%31s", "%18s", "%14s", "%14s", "%14s", "%9s", "%32s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s", "%14s"), names(soil)),"  "), collapse = "")
+	   x<-c()
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,1])){
+		   x[i] <- sprintf("%-4s","")
+		 }else{
+		   x[i] <- sprintf("%-4s",soil[i,1])
+		 }
+	   }
+	   soil[,1] <- x
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,2])){
+		   x[i] <- sprintf("%31s","")
+		 }else{
+		   x[i] <- sprintf("%31.0f",soil[i,2])
+		 }
+	   }
+	   soil[,2] <- x
+	   soil[,3] <- sprintf(rep("%18s",nrow(soil)),soil[,3])
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,4])){
+		   x[i] <- sprintf("%14s","")
+		 }else{
+		   x[i] <- sprintf("%14.5f",soil[i,4])
+		 }
+	   }
+	   soil[,4] <- x
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,5])){
+		   x[i] <- sprintf("%14s","")
+		 }else{
+		   x[i] <- sprintf("%14.5f",soil[i,5])
+		 }
+	   }
+	   soil[,5] <- x
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,6])){
+		   x[i] <- sprintf("%14s","")
+		 }else{
+		   x[i] <- sprintf("%14.5f",soil[i,6])
+		 }
+	   }
+	   soil[,6] <- x
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,7])){
+		   x[i] <- sprintf("%9s","")
+		 }else{
+		   x[i] <- sprintf("%9.0f",soil[i,7])
+		 }
+	   }
+	   soil[,7] <- x
+	   for(i in 1:nrow(soil)){
+		 if(is.na(soil[i,8])){
+		   x[i] <- sprintf("%32s","")
+		 }else{
+		   x[i] <- sprintf("%32.5f",soil[i,8])
+		 }
+	   }
+	   soil[,8] <- x
+	   for(j in 9:21){
+		 for(i in 1:nrow(soil)){
+		   if(is.na(soil[i,j])){
+			 x[i] <- sprintf("%14s","")
+		   }else{
+			 x[i] <- sprintf("%14.5f",soil[i,j])
+		   }
+		 }
+		 soil[,j] <- x
+	   }
+	   soil$ad <- "  "
+	   sink(paste0(thread_path,"/soils.sol"))
+	   writeLines(c("written by SWAT+ editor and modiefied for calibration"))
+	   writeLines(col_names)
+	   write.table(soil, quote = F, sep = "", row.names = F, col.names = F)
+	   sink()
+	 }else{                                            # all other parameters
+	   test <- read.csv(paste0(project_path,"/",lfi[i]), sep = "", skip = 1, header = T)
+	   for(j in 1:nrow(lsu)){
+		 if(lsu[j,3]=="pctchg"){
+		   test[,grep(lsu[j,1],names(test))] <- test[,grep(lsu[j,1],names(test))]*((100+as.numeric(lsu[j,5]))/100)
+		 }
+		 if(lsu[j,3]=="relchg"){
+		   test[,grep(lsu[j,1],names(test))] <- test[,grep(lsu[j,1],names(test))]*(1+as.numeric(lsu[j,5]))
+		 }
+		 if(lsu[j,3]=="abschg"){
+		   test[,grep(lsu[j,1],names(test))] <- test[,grep(lsu[j,1],names(test))]+as.numeric(lsu[j,5])
+		 }
+		 if(lsu[j,3]=="absval"){
+		   test[,grep(lsu[j,1],names(test))] <- as.numeric(lsu[j,5])
+		 }
+	   }
+	   sink(paste0(thread_path,"/",lfi[i]))
+	   writeLines(c("written by SWAT+ editor and modiefied for calibration"))
+	   write.table(test, quote = F, sep = " ", row.names = F)
+	   sink()
+	 }
+	}
+	if (file.exists(thread_path %//% "calibration.cal")) {
+	 file.remove(thread_path %//% "calibration.cal")
+	}
+	}
+
 
     ## Execute the SWAT exe file located in the thread folder
     msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
