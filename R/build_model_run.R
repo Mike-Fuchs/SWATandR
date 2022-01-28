@@ -127,7 +127,7 @@ get_os <- function() {
     "win"
   } else if (Sys.info()["sysname"] == "Darwin") {
     #"mac"
-    stop("SWATplusR only supported for Windows and Linux")
+    stop("SWATandR only supported for Windows and Linux")
   } else if (.Platform$OS.type == "unix") {
     "unix"
   } else {

@@ -27,8 +27,8 @@
 #'   most recent model revision is loaded by default.
 #'
 #' @section Examples:
-#'   To learn how to load the different demo data sets with \code{SWATplusR} see the
-#'   section \href{https://chrisschuerz.github.io/SWATplusR/articles/SWATplusR.html#loading-demos}{Loading demos}
+#'   To learn how to load the different demo data sets with \code{SWATandR} see the
+#'   section \href{https://Mike-Fuchs.github.io/SWATandR/articles/SWATandR.html#loading-demos}{Loading demos}
 #'   on the package's *Get Started* page.
 #'
 #' @importFrom stringr str_sub
@@ -46,7 +46,7 @@ load_demo <- function(dataset, path = NULL, version = NULL, revision = NULL) {
       if(!("devtools" %in% installed.packages()[,1])){
         install.packages("devtools")
       }
-      suppressWarnings(devtools::install_github("chrisschuerz/SWATdata"))
+      suppressWarnings(devtools::install_github("Mike-Fuchs/SWATdata"))
     }
   }
   pkg_path <- system.file(package = "SWATdata")

@@ -39,8 +39,8 @@ SWAT setups.
 }
 \section{Examples}{
 
-To learn how to load the different demo data sets with \code{SWATplusR} see the
-section \href{https://chrisschuerz.github.io/SWATplusR/articles/SWATplusR.html#loading-demos}{Loading demos}
+To learn how to load the different demo data sets with \code{SWATandR} see the
+section \href{https://Mike-Fuchs.github.io/SWATandR/articles/SWATandR.html#loading-demos}{Loading demos}
 on the package's \emph{Get Started} page.
 }
 

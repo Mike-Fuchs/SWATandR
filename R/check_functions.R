@@ -17,7 +17,7 @@ check_parameter <- function(parameter, abs_swat_val) {
   ## Read 'Absolute_SWAT_Values' file from custom file if provided or internal
   if(is.null(abs_swat_val)) {
     abs_swat_file <- readLines(system.file("extdata", "Absolute_SWAT_Values.txt",
-                                           package = "SWATplusR"), warn = FALSE)
+                                           package = "SWATandR"), warn = FALSE)
   } else {
     abs_swat_file <- readLines(abs_swat_val, warn = FALSE)
   }

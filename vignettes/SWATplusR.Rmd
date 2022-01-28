@@ -1,8 +1,8 @@
 ---
-title: "Getting started with SWATplusR"
+title: "Getting started with SWATandR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Exploring SWATplusR}
+  %\VignetteIndexEntry{Exploring SWATandR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: literature.bib
@@ -20,18 +20,18 @@ knitr::opts_chunk$set(
 
 ## Loading R packages
 
-Before exploring the package load `SWATplusR`:
+Before exploring the package load `SWATandR`:
 ```{r}
-library(SWATplusR)
+library(SWATandR)
 ```
 
 ## Loading demos
 
-The R package `SWATdata` provides a set of fast running, lightweight SWAT2012 and SWAT+ model setups of a head watershed of the Little River Experimental Watershed [LREW; @Bosch2007]. Additionally, discharge observations at the outlet of the demo catchment (Gauge J of LREW) and spatial information of the SWAT model setups are available from `SWATdata`. An overview of the available data sets is available on the [`SWATdata`](https://github.com/chrisschuerz/SWATdata#swatdata-) GitHub page.
+The R package `SWATdata` provides a set of fast running, lightweight SWAT2012 and SWAT+ model setups of a head watershed of the Little River Experimental Watershed [LREW; @Bosch2007]. Additionally, discharge observations at the outlet of the demo catchment (Gauge J of LREW) and spatial information of the SWAT model setups are available from `SWATdata`. An overview of the available data sets is available on the [`SWATdata`](https://github.com/Mike-Fuchs/SWATdata#swatdata-) GitHub page.
 
 ### SWAT projects
 
-The demo data that is available from `SWATdata` can be loaded with the function `load_demo()`. Loading an entire SWAT project to your hard drive requires the information that the loaded `dataset` is a `'project'`. As the project will be written to the hard drive a `path` is required. Further, the SWAT `version` must be provided, to either load a SWAT+ (`'plus'`), or a SWAT2012 (`'2012'`) project. Optionally, the `revision` number can be provided if a specific model revision (only for SWAT+) should be loaded. An overview of the different SWAT demo project setups (with their revision numbers) is available at the [`SWATdata`](https://github.com/chrisschuerz/SWATdata#swatdata-) GitHub page. If no revision number is provided, a project with the most recent revision number available fom `SWATdata` is loaded. A demo project can be loaded with the following command:
+The demo data that is available from `SWATdata` can be loaded with the function `load_demo()`. Loading an entire SWAT project to your hard drive requires the information that the loaded `dataset` is a `'project'`. As the project will be written to the hard drive a `path` is required. Further, the SWAT `version` must be provided, to either load a SWAT+ (`'plus'`), or a SWAT2012 (`'2012'`) project. Optionally, the `revision` number can be provided if a specific model revision (only for SWAT+) should be loaded. An overview of the different SWAT demo project setups (with their revision numbers) is available at the [`SWATdata`](https://github.com/Mike-Fuchs/SWATdata#swatdata-) GitHub page. If no revision number is provided, a project with the most recent revision number available fom `SWATdata` is loaded. A demo project can be loaded with the following command:
 
 ```{r, eval=FALSE}
 # The path where the SWAT demo project will be written
@@ -52,7 +52,7 @@ path_2012 <- load_demo(dataset = "project",
 Here `load_demo()` loads a demo project data set and saves it in the defined `demo_path`. Additionally, the function returns the final demo project path (`path_plus` and `path_2012`) as a character string back to R. This path can be directly used to run the SWAT model located in that path.
 
 ### Observation data
-`SWATplusR` also provides observation data of daily discharge records at the main outlet of the demo catchment (Gauge J of LREW) for the time period 1968-01-01 until 2012-12-31. The data set is useful for the model evaluation of a demo project. You can load the observation data as follows:
+`SWATandR` also provides observation data of daily discharge records at the main outlet of the demo catchment (Gauge J of LREW) for the time period 1968-01-01 until 2012-12-31. The data set is useful for the model evaluation of a demo project. You can load the observation data as follows:
 
 ```{r, eval=FALSE}
 q_obs <- load_demo(dataset = "observation")
@@ -71,7 +71,7 @@ plot(q_obs, type = "l")
 ```
 
 ### Spatial data
-To visualize simulation results spatially, shape files of the subbasins, river network, and HRUs for the SWAT+ and the SWAT2012 demo setups are available from `SWATplusR`. For spatial data `load_demo()` only returns the paths to the shape files. As the spatial data for the two SWAT project setups looks different loading the data requires the definition of the SWAT `version`.
+To visualize simulation results spatially, shape files of the subbasins, river network, and HRUs for the SWAT+ and the SWAT2012 demo setups are available from `SWATandR`. For spatial data `load_demo()` only returns the paths to the shape files. As the spatial data for the two SWAT project setups looks different loading the data requires the definition of the SWAT `version`.
 
 ```{r, eval=FALSE}
 # Path to the subbasin shape file
@@ -196,7 +196,7 @@ The output definition in a list has the additional advantage to optionally assig
 
 ### Exploring a simulation
 
-The goal of `SWATplusR` is to return the SWAT simulations in a *tidy* format. The simulation results look slightly different if only one simulation was performed, parameters were modified in a run, or multiple parameter sets were used to perform a large number of model evaluations. In general the outputs follow a general structure.
+The goal of `SWATandR` is to return the SWAT simulations in a *tidy* format. The simulation results look slightly different if only one simulation was performed, parameters were modified in a run, or multiple parameter sets were used to perform a large number of model evaluations. In general the outputs follow a general structure.
 
 If only one simulation was performed, where no model parameters were modified, `run_swat*()` returns a `tibble` [@Mueller2019] with a `date` column and the columns with the simulated values of the extracted variables. The output table of the simulated water balance components has a date column and columns with the four extracted water balance components. The variable names are the individual names that we defined in the output definition:
 
@@ -232,15 +232,15 @@ ggplot(data = q_plot) +
 
 ## Model parameter alteration
 
-The capability to alter model parameters in a SWAT simulation is an essential option in `SWATplusR`. Model parameters can be modified in a SWAT simulation by passing the respective parameters with the argument `parameter` in `run_swat*()`. A single parameter set can be provided as a vector. Many parameter sets that should be used in simulations have to be provided in a `tibble`.
+The capability to alter model parameters in a SWAT simulation is an essential option in `SWATandR`. Model parameters can be modified in a SWAT simulation by passing the respective parameters with the argument `parameter` in `run_swat*()`. A single parameter set can be provided as a vector. Many parameter sets that should be used in simulations have to be provided in a `tibble`.
 
-To modify a model parameter information on the type of change (relative, absolute change etc.), the extent of the change (e.g. all or selected subbasins/land uses/ soil types etc.) and the magnitude of change are required. In `SWATplusR` most of that information is passed with the variable name. Thus, the variable names use a very specific syntax. A parameter name can consist of several parts, where some are required and others are optional. The minimum requirements for the elements of a parameter name are the actual name of the parameter in the model an the type of change. Options for the type of change are *'relchg'* and *'pctchg'* to alter a parameter by a fraction or a percentage of the initial parameter value, *"abschg"* to add an absolute value to the initial parameter value, or *"absval"* to replace a parameter by an absolute value. In the example below the parameter curve number ('cn2') that is defined on HRU level will be increased by the absolute value 5 in all HRUs.
+To modify a model parameter information on the type of change (relative, absolute change etc.), the extent of the change (e.g. all or selected subbasins/land uses/ soil types etc.) and the magnitude of change are required. In `SWATandR` most of that information is passed with the variable name. Thus, the variable names use a very specific syntax. A parameter name can consist of several parts, where some are required and others are optional. The minimum requirements for the elements of a parameter name are the actual name of the parameter in the model an the type of change. Options for the type of change are *'relchg'* and *'pctchg'* to alter a parameter by a fraction or a percentage of the initial parameter value, *"abschg"* to add an absolute value to the initial parameter value, or *"absval"* to replace a parameter by an absolute value. In the example below the parameter curve number ('cn2') that is defined on HRU level will be increased by the absolute value 5 in all HRUs.
 
 ```{r, eval=FALSE}
 par_mod <- c("cn2.hru|change = abschg" = 5)
 ```
 
-Many options to constrain a parameter change are available in `SWATplusR` (*in the current version of `SWATplusR` only for SWAT2012*). Constraints for the alteration of a parameter is added with a '|' and a logical expression. Below you find an example for the change of the curve number 'CN2' in a SWAT2012 setup, that is only effective for the subbasins 1 to 5 and only for the land uses "WWHT" and "CORN". Also take care that 'CN2' is a parameter of the '.mgt' input file:
+Many options to constrain a parameter change are available in `SWATandR` (*in the current version of `SWATandR` only for SWAT2012*). Constraints for the alteration of a parameter is added with a '|' and a logical expression. Below you find an example for the change of the curve number 'CN2' in a SWAT2012 setup, that is only effective for the subbasins 1 to 5 and only for the land uses "WWHT" and "CORN". Also take care that 'CN2' is a parameter of the '.mgt' input file:
 
 ```{r, eval=FALSE}
 par_mod <- c("CN2.mgt|change = abschg | sub == 1:5 | luse %in% c('WWHT', 'CORN') " = 5)
@@ -286,7 +286,7 @@ par_set <- tibble("cn2.hru|change = abschg" = runif(8,-15,10),
                   "alpha.gw|change = absval" = runif(8, 0, 1))
 par_set
 ```
-The implementation in the `run_swat*()` function works the same way. To execute multiple SWAT simulations with many parameter sets the `SWATplusR` package provides an option parallel computing. To perform a parallel model execution the number of parallel threads is defined with the input argument `n_thread`.
+The implementation in the `run_swat*()` function works the same way. To execute multiple SWAT simulations with many parameter sets the `SWATandR` package provides an option parallel computing. To perform a parallel model execution the number of parallel threads is defined with the input argument `n_thread`.
 
 ```{r, eval=F}
 q_sim <- run_swatplus(project_path = path_plus,
@@ -358,7 +358,7 @@ run_swatplus(project_path = path_plus,
 
 You can see that the function did not return any results in R but generated a folder that we called "q_sur_lat" passed by the argument `save_file` in the project folder. That folder now contains several data bases. The first data base is called "par_dat.sqlite" and stores the parameter information and the date vector. Further, each of the parallel threads of the simulation generated a data base where each thread wrote the simulation results (This is necessary to avoid access conflicts when writing to data bases in parallel). The simulation data bases are always called "sim_thread_i.sqlite", where "i" are the indexes of the individual threads (1 to 4 in this case).
 
-`SWATplusR` provides two options to access the saved simulations. Loading large data bases into the R environment can take a long time. If you only want to know the the content of saved simulations (e.g. to check the successful simulation runs after a crash) you can scan the saved runs with the function `scan_swat_run()`. The function writes meta information on the saved SWAT simulations into the console. The function returns the following for our saved runs:
+`SWATandR` provides two options to access the saved simulations. Loading large data bases into the R environment can take a long time. If you only want to know the the content of saved simulations (e.g. to check the successful simulation runs after a crash) you can scan the saved runs with the function `scan_swat_run()`. The function writes meta information on the saved SWAT simulations into the console. The function returns the following for our saved runs:
 
 ```{r, eval=FALSE}
 # Set the path to the folder where the date bases were saved
@@ -412,7 +412,7 @@ q_subset
 ```
 
 
-## Further `SWATplusR` input arguments
+## Further `SWATandR` input arguments
 
 The functions `run_swat2012()` and `run_swatplus()` have many further input arguments that allow to control important settings of a SWAT simulation. Here I will just mention a few of the essential ones. A detailed overview of the input arguments is provided in the respective function documentations.
 The simulation period can be controlled with the arguments `start_date` and `end_date`. The format writing the outputs of the simulations in the SWAT project folder is controlled by the arguments `output_interval` to define whether the simulations are written with daily, monthly or yearly time steps, `years_skip` to define the simulated years that should be skipped for writing the simulation outputs. With the argument `run_index` a subset of the provided parameter combinations can be simulated. This is useful, when for instance distributing the simulations on multiple computers, or when continuing the simulations after a crash.

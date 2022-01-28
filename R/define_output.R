@@ -7,7 +7,7 @@
 #' the examples how to use the \code{output} definition together with
 #' \code{\link{run_swat2012}} or \code{\link{run_swatplus}}. Further, more comprehensive
 #' examples are provided on the package's 'Get Started' page in the section
-#' '\href{https://chrisschuerz.github.io/SWATplusR/articles/SWATplusR.html#first-swat-model-runs}{First SWAT model runs}.
+#' '\href{https://Mike-Fuchs.github.io/SWATandR/articles/SWATandR.html#first-swat-model-runs}{First SWAT model runs}.
 #'
 #' @param file Character string. The SWAT output file to read.
 #' (Valid inputs are \code{'rch'}, \code{'sub'}, \code{'hru'}, and \code{'sed'} for

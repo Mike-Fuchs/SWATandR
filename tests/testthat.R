@@ -1,4 +1,4 @@
 library(testthat)
-library(SWATplusR)
+library(SWATandR)
 
-test_check("SWATplusR")
+test_check("SWATandR")

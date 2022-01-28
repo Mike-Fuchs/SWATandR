@@ -1,6 +1,6 @@
-title: SWATplusR
+title: SWATandR
 
-url: http://chrisschuerz.github.io/SWATplusR
+url: http://Mike-Fuchs.github.io/SWATandR
 
 template:
   params:
@@ -8,12 +8,12 @@ template:
 
 authors:
   Christoph Schürz:
-    href: https://github.com/chrisschuerz
+    href: https://github.com/Mike-Fuchs
 
 home:
   links:
   - text: Demo data sets
-    href: http://github.com/chrisschuerz/SWATdata
+    href: http://github.com/Mike-Fuchs/SWATdata
 
 reference:
   - title: Demo data

@@ -3,7 +3,7 @@ context("Loading demo datasets")
 library(sf)
 library(here)
 
-os <- SWATplusR:::get_os()
+os <- SWATandR:::get_os()
 
 test_that("Test wrong or missing inputs:", {
   expect_error(load_demo(dataset = "abc"))

@@ -15,7 +15,7 @@
 #' @param parameter (optional) SWAT model parameters either provided as named
 #'   vector or a tibble. The parameter changes provided with \code{parameter}
 #'   are performed during the model execution accordingly. To learn how to
-#'   modify parameters see the \href{https://chrisschuerz.github.io/SWATplusR/articles/SWATplusR.html}{Get started} page of \code{SWATplusR}.
+#'   modify parameters see the \href{https://Mike-Fuchs.github.io/SWATandR/articles/SWATandR.html}{Get started} page of \code{SWATandR}.
 #' @param start_date (optional) Start date of the SWAT simulation. Provided as
 #'   character string in a ymd format (e.g. 'yyyy-mm-dd') or in Date format.
 #' @param end_date (optional) End date of the SWAT simulation. Provided as
@@ -76,8 +76,8 @@
 #'   written.  \code{Default = FALSE}
 #'
 #' @section Examples:
-#'   To learn the basics on how to use \code{SWATplusR} see the
-#'   \href{https://chrisschuerz.github.io/SWATplusR/articles/SWATplusR.html#first-swat-model-runs}{Get started}
+#'   To learn the basics on how to use \code{SWATandR} see the
+#'   \href{https://Mike-Fuchs.github.io/SWATandR/articles/SWATandR.html#first-swat-model-runs}{Get started}
 #'   page on the package's github page.
 #' @return Returns the simulation results for the defined output variables as a
 #'   tibble. If more than one parameter set was provided a list of tibbles is

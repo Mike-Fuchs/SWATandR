@@ -477,7 +477,7 @@
   author  = {Christoph Schürz},
   year    = {2018},
   note    = {R package version 0.2.1},
-  url     = {https://github.com/chrisschuerz/aRastoCAT},
+  url     = {https://github.com/Mike-Fuchs/aRastoCAT},
   urldate = {2019-03-05},
 }
 
@@ -499,7 +499,7 @@
   author  = {Christoph Schürz},
   year    = {2018},
   note    = {R package version 0.2.0},
-  url     = {https://github.com/chrisschuerz/solACE},
+  url     = {https://github.com/Mike-Fuchs/solACE},
   urldate = {2019-03-05},
 }
 
