@@ -113,17 +113,22 @@ run_swatplus <- function(project_path, output, parameter = NULL,
   stopifnot(is.logical(quiet))
 
   ## Check if all parameter names exist in cal_parms.cal
-  if(!is.null(parameter)) {
-    parameter <- format_swatplus_parameter(parameter)
-    check_swatplus_parameter(project_path, parameter)
-    unit_cons <- read_unit_conditions(project_path, parameter)
-
-    # here would also be clever to implement parameter boundary checkup keep
-    # parameter boundary file in R package and write to project folder when it
-    # does not exist. Otherwise read boundary file from there and do check! Jeff
-    # provides some workaround in SWAT+ internally (automatic setting to
-    # lower/upper boundary)
+  if (!is.null(parameter)) {
+    values <- parameter
+    names(values) <- unlist(lapply(strsplit(names(parameter),"\\|"), `[[`, 1))
+    aaa<-unlist(lapply(strsplit(names(parameter),"\\|"), `[[`, 1))
+    bbb<-unlist(lapply(strsplit(names(parameter),"\\|"), `[[`, 1))
+    ccc<-unlist(lapply(strsplit(names(parameter),"\\|"), `[[`, 2))
+    ddd<-unlist(lapply(strsplit(names(parameter),"\\|"), `[[`, 3))
+    definition <- tibble(
+      par_name = aaa,
+      parameter = bbb,
+      file_name = ccc,
+      change = ddd
+    )
+    parameter <- list(values=values,definition=definition)
   }
+  
   ## Check values provided with run_index and prepare run_index for simulation
   if(!is.null(run_index)){
     run_index <- check_run_index(run_index, parameter$values)
@@ -182,6 +187,16 @@ run_swatplus <- function(project_path, output, parameter = NULL,
   }
   # cat("SWAT revision is ",swat_rev,"\n")
   output <- translate_outfile_names(output, model_setup$output_interval, revision)
+  if(any(grepl("pest",output))){
+    if(output_interval=="d"){
+      model_setup$print.prt[48] <- "pest                         y             n             n             n  "
+    }else if(output_interval=="m"){
+      model_setup$print.prt[48] <- "pest                         n             y             n             n  "
+    }else{
+      model_setup$print.prt[48] <- "pest                         n             n             y             n  "
+    }
+  }
+  
 #-------------------------------------------------------------------------------
   # Write files
   ## Write model setup: Files that define the time range etc. of the SWAT
