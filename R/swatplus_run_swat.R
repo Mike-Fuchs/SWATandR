@@ -259,6 +259,16 @@ run_swatplus <- function(project_path, output, parameter = NULL,
     ## Execute the SWAT exe file located in the thread folder
     msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
 
+	## modify header of pest files
+	if(any(grepl("pest",output))){
+	 z <- unique(unlist(as.data.frame(output)[1,grep("pest",as.data.frame(output))]))
+	 for(i in 1:length(z)){
+	  x<-readLines(paste0(thread_path,"/",z[i]))
+	  y<-c(x[1],stringr::str_replace_all(stringr::str_replace_all(x[2],"_kg","   "),"/ha","   "),"                                                                                                                   ",x[3:length(x)])
+	  writeLines(y, paste0(thread_path,"/",z[i]))
+	 }
+	}
+
     if(nchar(msg$stderr) == 0) {
       ## Read defined model outputs
       model_output <- read_swatplus_output(output, thread_path, revision) %>%
