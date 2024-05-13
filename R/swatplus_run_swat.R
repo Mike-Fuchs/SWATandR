@@ -421,7 +421,7 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 	   sink()
 	   
 	   # urban debugging 
-	   sink(paste0(thread_path,"/",debug.txt))
+	   sink(paste0(thread_path,"/debug.txt"))
 	   print(test)	   
 	   sink()
 	   
