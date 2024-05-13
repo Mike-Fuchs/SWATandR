@@ -419,6 +419,12 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 	   writeLines(c("written by SWAT+ editor and modiefied for calibration"))
 	   write.table(test, quote = F, sep = " ", row.names = F)
 	   sink()
+	   
+	   # urban debugging 
+	   sink(paste0(thread_path,"/",debug.txt))
+	   print(test)	   
+	   sink()
+	   
 	 }
 	}
 	if (file.exists(thread_path %//% "calibration.cal")) {
