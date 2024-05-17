@@ -90,7 +90,8 @@ run_swatplus <- function(project_path, output, parameter = NULL,
                          save_file = NULL, return_output = TRUE,
                          add_parameter = TRUE, add_date = TRUE,
                          refresh = TRUE, keep_folder = FALSE,
-                         quiet = FALSE, revision = NULL,singel_plant = TRUE) {
+                         quiet = FALSE, revision = NULL,singel_plant = TRUE,
+						 n_tries = 1) {
 
 #-------------------------------------------------------------------------------
 
@@ -434,9 +435,11 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 
 
     ## Execute the SWAT exe file located in the thread folder
-    for(lll in 1:10){
+    for(lll in 1:n_tries){
 		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
-		if(file.exists("success.fin")) break	
+		if(file.exists("success.fin")){
+		break
+		}
 	}
 
 	## modify header of pest files
