@@ -90,8 +90,7 @@ run_swatplus <- function(project_path, output, parameter = NULL,
                          save_file = NULL, return_output = TRUE,
                          add_parameter = TRUE, add_date = TRUE,
                          refresh = TRUE, keep_folder = FALSE,
-                         quiet = FALSE, revision = NULL,singel_plant = TRUE,
-						 n_tries = 1) {
+                         quiet = FALSE, revision = NULL,singel_plant = TRUE) {
 
 #-------------------------------------------------------------------------------
 
@@ -435,14 +434,24 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 
 
     ## Execute the SWAT exe file located in the thread folder
-    for(lll in 1:n_tries){
-		Sys.sleep(runif(1,0,10))
+    msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
+	
+	if(!any(grepl("Execution successfully completed",readLines("simulation.out")))){
 		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
-		if(any(grepl("Execution successfully completed",readLines("simulation.out")))){
-		return(msg)
-		}
 	}
-
+	
+	if(!any(grepl("Execution successfully completed",readLines("simulation.out")))){
+		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
+	}
+	
+	if(!any(grepl("Execution successfully completed",readLines("simulation.out")))){
+		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
+	}
+	
+	if(!any(grepl("Execution successfully completed",readLines("simulation.out")))){
+		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
+	}
+	
 	## modify header of pest files
 	if(any(grepl("pest",output))){
 	 z <- unique(unlist(as.data.frame(output)[1,grep("pest",as.data.frame(output))]))
