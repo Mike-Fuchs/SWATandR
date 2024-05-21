@@ -439,7 +439,7 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 		Sys.sleep(runif(1,0,10))
 		msg <- run(run_os(swat_exe, os), wd = thread_path, error_on_status = FALSE)
 		if(any(grepl("Execution successfully completed",readLines("simulation.out")))){
-		return(msg)
+		break
 		}
 	}
 
