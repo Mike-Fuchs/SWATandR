@@ -271,7 +271,7 @@ run_swatplus <- function(project_path, output, parameter = NULL,
 	# for loop over all files
 	for(i in 1:length(lfi)){
 	 lsu <- lkp[which(lkp$file==lfi[i]),]
-	 if(lfi[i]=="plants.plt" & singel_plant){                         # for plant parameters
+	 if(singel_plant){                         # for plant parameters
 	   test <- read.csv(paste0(project_path,"/",lfi[i]), sep = "", skip = 1, header = T)
 	   for(j in 1:nrow(lsu)){
 		 if(lsu[j,3]=="pctchg"){
